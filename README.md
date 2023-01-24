@@ -1,6 +1,6 @@
 ## Проект «Foodgram»
 ***
-[Ссылка на сайт](https://vorvorsky.tplinkdns.com/)
+[Ссылка на сайт](http://vorvorsky.tplinkdns.com/recipes)
 ***
 ### Технологии:
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
