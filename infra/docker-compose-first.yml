@@ -26,7 +26,11 @@ services:
     image: vorvorsky/foodgram_backend:v1.02
     restart: always
     command: >
-      bash -c "gunicorn foodgram.wsgi:application --bind 0:8000"
+      bash -c "python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_USERNAME} --email ${DJANGO_SUPERUSER_EMAIL}
+      && python manage.py collectstatic --no-input
+      && gunicorn foodgram.wsgi:application --bind 0:8000"
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
