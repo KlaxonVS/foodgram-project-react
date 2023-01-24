@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div>
+        <h2>
+            Список покупок:
+        </h2>
+        <ol>
+            {% for ingredient in page_obj %}
+                <li>
+                    {{ ingredient.ingredient__name  }}: {{ ingredient.amount }} {{ ingredient.ingredient__measurement_unit }}
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+</body>
+</html>

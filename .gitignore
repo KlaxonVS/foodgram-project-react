@@ -1,3 +1,9 @@
+# Personal
+private/
+
+# Media and Statics
+media/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
