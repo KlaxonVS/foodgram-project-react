@@ -339,7 +339,9 @@ class FollowSerializer(serializers.ModelSerializer):
     def get_recipes(self, follower):
         """Поле сериализатора с ограниччением количества рецептов и их коротким представлением"""
         request = self.context.get('request')
-        recipes_limit = int(request.query_params.get('recipes_limit')) if request.query_params.get('recipes_limit') else None
+        recipes_limit = (int(request.query_params.get('recipes_limit'))
+                         if request.query_params.get('recipes_limit')
+                         else None)
         recipes = (Recipe.objects.filter(author=follower.author)
                    if not recipes_limit 
                    else Recipe.objects.filter(author=follower.author)
