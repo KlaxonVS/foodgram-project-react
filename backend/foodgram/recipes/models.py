@@ -1,12 +1,10 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.validators import MaxLengthValidator, MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
+from users.models import User
 from .validators import validate_hex
-
-User = get_user_model()
 
 
 class Ingredient(models.Model):
@@ -17,19 +15,20 @@ class Ingredient(models.Model):
     )
     measurement_unit = models.CharField(
         'Единица измерения',
-        max_length=15
+        max_length=settings.M_UNIT_LENGTH
     )
 
     class Meta:
-        ordering = ['name']
+        ordering = ('name',)
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        constraints = [
+        constraints = (
             models.UniqueConstraint(
                 fields=['name', 'measurement_unit'],
                 name=('Сочетания названия и единицы'
                       'измерения должно быть уникально')
-        )]
+            ),
+        )
 
     def __str__(self):
         return f'{self.name} {self.measurement_unit}'
@@ -136,7 +135,7 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         related_name='recipe_ingredient'
     )
-    amount = models.PositiveSmallIntegerField(
+    amount = models.FloatField(
         verbose_name='Количество',
         validators=[MinValueValidator(
             0.01,
@@ -151,7 +150,7 @@ class RecipeIngredient(models.Model):
             UniqueConstraint(
                 fields=('recipe', 'ingredient'),
                 name='Ингредиенты в рецепте не повторяются'
-            )
+            ),
         ]
 
     def __str__(self):
@@ -159,22 +158,27 @@ class RecipeIngredient(models.Model):
                 f' {self.ingredient.measurement_unit}')
 
 
-class Favorite(models.Model):
-    """Модель избранных рецептов."""
+class FavoriteAndCart(models.Model):
+    """Общая модель для рецептов в избранном и в корзине."""
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
         on_delete=models.CASCADE,
-        related_name='favorite'
     )
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='Рецепт',
-        related_name='favorite',
         on_delete=models.CASCADE
     )
-
+    
     class Meta:
+        abstract = True
+
+
+class Favorite(FavoriteAndCart):
+    """Модель избранных рецептов."""
+    class Meta:
+        default_related_name = 'favorite'
         ordering = ['user']
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
@@ -189,22 +193,10 @@ class Favorite(models.Model):
         return f'{self.user} добавил в избранное: {self.recipe}'
 
 
-class ShoppingCart(models.Model):
+class ShoppingCart(FavoriteAndCart):
     """Модель корзины покупок."""
-    user = models.ForeignKey(
-        User,
-        verbose_name='Пользователь',
-        on_delete=models.CASCADE,
-        related_name='cart'
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        related_name='cart',
-        verbose_name='Recipe',
-        on_delete=models.CASCADE
-    )
-    
     class Meta:
+        default_related_name = 'cart'
         ordering = ['id']
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'

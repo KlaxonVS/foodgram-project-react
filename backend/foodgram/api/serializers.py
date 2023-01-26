@@ -1,16 +1,13 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxLengthValidator, MinValueValidator
-from recipes.models import (Ingredient, Recipe, RecipeIngredient,
-                            Tag)
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from users.models import Follow
+
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
+from users.models import Follow, User
 from users.validators import validate_username
-
-from .utils import Base64ImageField
-
-User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,10 +27,10 @@ class UserSerializer(serializers.ModelSerializer):
     
     def get_is_subscribed(self, user):
         """Поле для обозначения подписки на пользователя."""
+        follower = self.context['request'].user
         return (
-            not self.context['request'].user.is_anonymous
-            and user.following.filter(
-                user=self.context['request'].user).exists()
+            not user.is_anonymous
+            and follower.follower.filter(author=user).exists()
         )
 
 
@@ -126,7 +123,7 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания промежуточной модели рецепта-ингредиента."""
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),
                                             source='ingredient')
-    amount = serializers.IntegerField(
+    amount = serializers.FloatField(
         validators=
         [MinValueValidator(0.01, 'Количество должно быть больше нуля')]
     )
@@ -160,19 +157,18 @@ class RecipeViewSerializer(serializers.ModelSerializer):
         
     def get_is_favorited(self, recipe):
         """Поле для обозначения нахождения рецепта в избранном."""
+        user = self.context['request'].user
         return (
-            not self.context['request'].user.is_anonymous
-            and recipe.favorite.filter(
-                user=self.context['request'].user).exists()
+            not user.is_anonymous
+            and recipe.favorite.filter(user=user).exists()
         )
     
     def get_is_in_shopping_cart(self, recipe):
         """Поле для обозначения нахождения рецепта в корзине."""
+        user = self.context['request'].user
         return (
-            not self.context['request'].user.is_anonymous
-            and recipe.cart.filter(
-            user=self.context['request'].user,
-            recipe=recipe.id).exists()
+            not user.is_anonymous
+            and recipe.cart.filter(user=user, recipe=recipe.id).exists()
             )
 
 
@@ -269,12 +265,16 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_ingredients(recipe, ingredients):
-        for ingredient in ingredients:
-            RecipeIngredient(
+        def sorter(ingredient):
+            return ingredient.get('ingredient').id
+        ingredients.sort(key=sorter)
+        RecipeIngredient.objects.bulk_create(
+            [RecipeIngredient(
                 recipe=recipe,
                 ingredient_id=ingredient.get('ingredient').id,
                 amount=ingredient.get('amount')
-            ).save()
+            ) for ingredient in ingredients]
+        )
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')
@@ -339,12 +339,11 @@ class FollowSerializer(serializers.ModelSerializer):
     def get_recipes(self, follower):
         """Поле сериализатора с ограниччением количества рецептов и их коротким представлением"""
         request = self.context.get('request')
-        recipes_limit = 3
-        if request.query_params.get('recipes_limit'):
-            recipes_limit = int(request.query_params.get('recipes_limit'))
+        recipes_limit = int(request.query_params.get('recipes_limit')) if request.query_params.get('recipes_limit') else None
         recipes = (Recipe.objects.filter(author=follower.author)
-                   [:recipes_limit] if recipes_limit is not None 
-                   else Recipe.objects.filter(author=follower.author))
+                   if not recipes_limit 
+                   else Recipe.objects.filter(author=follower.author)
+                   [:recipes_limit])
         serializer = ShortRecipe(
             recipes, many=True, read_only=True,
             context={'request': self.context.get('request')}

@@ -1,7 +1,7 @@
 ## Проект «Foodgram»
 ***
-[Ссылка на сайт](http://vorvorsky.tplinkdns.com/recipes)
-[Ссылка на API](http://vorvorsky.tplinkdns.com/api/)
+[Ссылка на сайт](http://vorvorsky.sytes.net/recipes)
+[Ссылка на API](http://vorvorsky.sytes.net/api/)
 ***
 ### Технологии:
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)

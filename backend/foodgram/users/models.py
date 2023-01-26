@@ -7,20 +7,7 @@ from .validators import validate_username
 
 class User(AbstractUser):
     """Модель пользователя с добавлением поля роль"""
-    ADMIN = 'admin'
-    USER = 'user'
 
-    ROLE_CHOICES = (
-        (ADMIN, 'Администратор'),
-        (USER, 'Пользователь'),
-    )
-    
-    role = models.CharField(
-        'Роль',
-        max_length=max(len(role_en) for role_en, _ in ROLE_CHOICES),
-        choices=ROLE_CHOICES,
-        default=USER
-    )
     username = models.CharField(
         'Имя пользователя',
         max_length=settings.USERNAME_LENGTH,
@@ -32,19 +19,23 @@ class User(AbstractUser):
         max_length=settings.EMAIL_LENGTH,
         unique=True,
     )
+    
+    first_name = models.CharField(
+        'Имя',
+        max_length=settings.F_NAME_LENGTH
+    )
+    last_name = models.CharField(
+        'Фамилия',
+        max_length=settings.L_NAME_LENGTH
+    )
 
     class Meta:
-        ordering = ('username',)
+        ordering = ('email',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
-    @property
-    def is_admin(self):
-        """Проверяет что пользователь администратор"""
-        return self.role == self.ADMIN or self.is_staff
-
     def __str__(self):
-        return self.username
+        return self.email
 
 
 class Follow(models.Model):

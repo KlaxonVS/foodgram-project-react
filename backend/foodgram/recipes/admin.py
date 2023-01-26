@@ -7,22 +7,26 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
 admin.site.empty_value_display = '-пусто-'
 
 
-class RecipeIngredientInLine(admin.TabularInline):
-    model = RecipeIngredient
-
-
 class RecipeAdmin(admin.ModelAdmin):
-    inlines = [RecipeIngredientInLine]
-    readonly_fields = ('favorite_count',)
+    readonly_fields = ('favorite_count', 'ingredient_list')
     list_display = (
         'pub_date',
         'id',
         'name',
-        'author'
+        'author',
+        'favorite_count',
     )
-    search_fields = ('email', 'username',)
-    list_filter = ('author', 'name', 'tags')
+    search_fields = ('name', 'author',)
+    list_filter = ('tags',)
     list_per_page = settings.PAGE_LMT
+    
+    def ingredient_list(self, obj):
+        return '\n'.join([
+            f'{ol}. {recipe_i.ingredient.name}: {recipe_i.amount}'
+            f'{recipe_i.ingredient.measurement_unit}.'
+            for ol, recipe_i 
+            in enumerate(obj.recipe_ingredient.all(), start=1)
+        ])
     
     def favorite_count(self, obj):
         return obj.favorite.count() 
@@ -63,23 +67,16 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
         'ingredient'
     )
     search_fields = ('recipe', 'ingredient')
-    list_filter = ('recipe', 'ingredient')
     list_per_page = settings.PAGE_LMT
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
-#    readonly_fields = ('shopping_list',)
     list_display = (
         'user',
     )
     search_fields = ('user',)
     list_per_page = settings.PAGE_LMT
 
-#    def shopping_list(self, obj):
-#        recipes = obj.recipes
-#        data = recipes.values('ingredients').annotate(ing_sum=Sum('ingredients__recipe_iningredient__amount')).order_by()
-#        return data
-# recipes.aggregate(Sum('ingredients__recipe_iningredient__amount'))
 
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Ingredient, IngredientAdmin)

@@ -20,17 +20,13 @@ services:
       - database:/var/lib/postgresql/data/
     env_file:
       - ./.env
-  
+
   backend:
     container_name: foodgram_backend
-    image: vorvorsky/foodgram_backend:v1.02
+    image: vorvorsky/foodgram_backend:v1.03
     restart: always
     command: >
-      bash -c "python manage.py makemigrations
-      && python manage.py migrate
-      && python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_USERNAME} --email ${DJANGO_SUPERUSER_EMAIL}
-      && python manage.py collectstatic --no-input
-      && gunicorn foodgram.wsgi:application --bind 0:8000"
+      bash -c "gunicorn foodgram.wsgi:application --bind 0:8000"
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -47,8 +43,10 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
+      - ./docs/:/usr/share/nginx/html/api/docs/
       - static_value:/app/static/
       - media_value:/app/media/
     depends_on:
       - backend
+
+
