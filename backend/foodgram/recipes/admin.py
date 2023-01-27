@@ -39,6 +39,7 @@ class RecipeAdmin(admin.ModelAdmin):
         return obj.favorite.count()
 
     favorite_count.short_description = 'Добавлено в избранное'
+    ingredient_list.short_description = 'Ингредиенты'
 
 
 class FavoriteAdmin(admin.ModelAdmin):
