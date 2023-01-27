@@ -1,6 +1,6 @@
 ## Проект «Foodgram»
 ***
-[![base_workflow](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/base_workflow.yml/badge.svg)](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/base_workflow.yml)<br/>
+[![base_workflow](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/foodgram_workflow.yml)<br/>
 ***
 [Ссылка на сайт](https://vorsky.sytes.net/recipes)
 [Ссылка на API](https://vorsky.sytes.net/api/)
