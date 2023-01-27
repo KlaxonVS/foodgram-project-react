@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
         """Поле для обозначения подписки на пользователя."""
         follower = self.context['request'].user
         return (
-            not user.is_anonymous
+            not follower.is_anonymous
             and follower.follower.filter(author=user).exists()
         )
 
