@@ -1,5 +1,6 @@
 # Personal
 private/
+.env.server
 
 # Media and Statics
 media/

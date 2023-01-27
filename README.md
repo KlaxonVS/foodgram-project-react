@@ -1,10 +1,11 @@
 ## Проект «Foodgram»
 ***
-[Ссылка на сайт](http://vorvorsky.sytes.net/recipes)
-[Ссылка на API](http://vorvorsky.sytes.net/api/)
-[Ссылка на админку](http://vorvorsky.sytes.net/admin/)
-[Ссылка на redoc](http://vorvorsky.sytes.net/api/docs/)
-<br>аккаунт: foodgram_admin<br>пароль: zee5czee5c1488
+[![base_workflow](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/base_workflow.yml/badge.svg)](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/base_workflow.yml)<br/>
+***
+[Ссылка на сайт](https://vorsky.sytes.net/recipes)
+[Ссылка на API](https://vorsky.sytes.net/api/)
+[Ссылка на админку](https://vorsky.sytes.net/admin/)
+[Ссылка на redoc](https://vorsky.sytes.net/api/docs/)
 
 ***
 ### Технологии:
