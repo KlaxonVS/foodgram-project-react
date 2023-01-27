@@ -27,16 +27,16 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'author',)
     list_filter = ('tags',)
     list_per_page = settings.PAGE_LMT
-    
+
     def ingredient_list(self, obj):
         return ', '.join([
             f'{recipe_i.ingredient.name}'
-            for recipe_i 
+            for recipe_i
             in obj.recipe_ingredient.all()
         ])
-    
+
     def favorite_count(self, obj):
-        return obj.favorite.count() 
+        return obj.favorite.count()
 
     favorite_count.short_description = 'Добавлено в избранное'
 
@@ -67,6 +67,7 @@ class IngredientAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('measurement_unit',)
     list_per_page = settings.PAGE_LMT
+
 
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = (

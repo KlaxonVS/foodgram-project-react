@@ -6,17 +6,21 @@ from recipes.models import Ingredient, Tag
 
 DATA_DIR = 'recipes/static/data/' if settings.DEBUG else 'static/data/'
 
+
 def load_ingredients():
     """Загружает данные из файла ingredients.csv."""
     print('loading ingredients data...')
     with open(f'{DATA_DIR}ingredients.csv', encoding='utf-8') as file:
-        data = DictReader(file, fieldnames=['name', 'measurement_unit'], delimiter=',')
+        data = DictReader(
+            file, fieldnames=['name', 'measurement_unit'], delimiter=','
+            )
         for row in data:
             Ingredient.objects.get_or_create(
                 name=row['name'],
                 measurement_unit=row['measurement_unit']
             )
     print('ingredient data loaded!')
+
 
 def load_ingredients_json():
     """Загружает данные из файла ingredients.json."""
@@ -28,7 +32,8 @@ def load_ingredients_json():
                 measurement_unit=row['measurement_unit']
             )
     print('user data loaded!')
-    
+
+
 def load_base_tags():
     print('loading tags data...')
     tags = [('Завтрак', "#006400", 'breakfast'),

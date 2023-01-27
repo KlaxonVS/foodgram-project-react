@@ -19,7 +19,7 @@ class User(AbstractUser):
         max_length=settings.EMAIL_LENGTH,
         unique=True,
     )
-    
+
     first_name = models.CharField(
         'Имя',
         max_length=settings.F_NAME_LENGTH
@@ -28,7 +28,7 @@ class User(AbstractUser):
         'Фамилия',
         max_length=settings.L_NAME_LENGTH
     )
-    
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
@@ -59,14 +59,14 @@ class Follow(models.Model):
         verbose_name = 'Подписку'
         verbose_name_plural = 'Подписки'
         constraints = (
-        models.UniqueConstraint(
-            fields=('user', 'author'),
-            name='Подписаться на автора можно только один раз'
-        ),
-        models.CheckConstraint(
-            name='Нельзя подписаться на себя',
-            check=(~models.Q(user=models.F('author'))),
-        ))
+            models.UniqueConstraint(
+                fields=('user', 'author'),
+                name='Подписаться на автора можно только один раз'
+            ),
+            models.CheckConstraint(
+                name='Нельзя подписаться на себя',
+                check=(~models.Q(user=models.F('author'))),
+            ))
 
     def __str__(self):
         return f'{self.user} подписан на {self.author}'

@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.validators import MaxLengthValidator, MinValueValidator
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -24,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name', 'is_subscribed'
         )
         read_only_fields = ('__all__',)
-    
+
     def get_is_subscribed(self, user):
         """Поле для обозначения подписки на пользователя."""
         follower = self.context['request'].user
@@ -60,7 +59,7 @@ class UserCreateSerializer(UserSerializer):
         max_length=settings.PASSWORD_LENGTH,
         write_only=True
     )
-    
+
     class Meta:
         model = User
         fields = (
@@ -76,16 +75,16 @@ class Login(serializers.Serializer):
     )
     password = serializers.CharField()
 
+
 class ChangePassword(serializers.Serializer):
     """Сериализатор смены пароля."""
     new_password = serializers.CharField()
     current_password = serializers.CharField()
 
 
-
 class TagSerializer(serializers.ModelSerializer):
     """Общий сериализатор для модели тега."""
-    
+
     class Meta:
         model = Tag
         fields = '__all__'
@@ -93,7 +92,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class IngredientSerializer(serializers.ModelSerializer):
     """Общий сериализатор для модели ингредиента."""
-    
+
     class Meta:
         model = Ingredient
         fields = '__all__'
@@ -112,7 +111,7 @@ class RecipeIngredientViewSerializer(serializers.ModelSerializer):
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit',
     )
-    
+
     class Meta:
         model = RecipeIngredient
         fields = ('id', 'name', 'measurement_unit', 'amount')
@@ -124,10 +123,9 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),
                                             source='ingredient')
     amount = serializers.IntegerField(
-        validators=
-        [MinValueValidator(1, 'Количество должно быть больше нуля')]
+        validators=[MinValueValidator(1, 'Количество должно быть больше нуля')]
     )
-    
+
     class Meta:
         model = RecipeIngredient
         fields = ('id', 'amount')
@@ -147,14 +145,14 @@ class RecipeViewSerializer(serializers.ModelSerializer):
     is_in_shopping_cart = serializers.SerializerMethodField(
         method_name='get_is_in_shopping_cart'
     )
-    
+
     class Meta:
         model = Recipe
         fields = (
             'id', 'tags', 'author', 'ingredients', 'is_favorited',
             'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
         )
-        
+
     def get_is_favorited(self, recipe):
         """Поле для обозначения нахождения рецепта в избранном."""
         user = self.context['request'].user
@@ -162,7 +160,7 @@ class RecipeViewSerializer(serializers.ModelSerializer):
             not user.is_anonymous
             and recipe.favorite.filter(user=user).exists()
         )
-    
+
     def get_is_in_shopping_cart(self, recipe):
         """Поле для обозначения нахождения рецепта в корзине."""
         user = self.context['request'].user
@@ -174,11 +172,10 @@ class RecipeViewSerializer(serializers.ModelSerializer):
 
 class ShortRecipe(serializers.ModelSerializer):
     """Сокращенный сериализатор для рецепта."""
-    
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
-        
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
@@ -205,7 +202,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             'Время приготовления не может быть меньше 1'
         )]
     )
-    
+
     class Meta:
         model = Recipe
         fields = (
@@ -237,13 +234,12 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             for ingredient in ingredients
             if ingredient_ids.count(ingredient.get('ingredient').id) > 1
         ]
-        if repeat_ingredients :
+        if repeat_ingredients:
             raise serializers.ValidationError(
                 f'ingredients не должны повторяться: {repeat_ingredients}'
             )
         return ingredients
-        
-    
+
     def validate_tags(self, tags):
         if type(tags) is not list:
             raise serializers.ValidationError(
@@ -286,7 +282,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         self.create_ingredients(recipe, ingredients)
         recipe.tags.set(tags)
         return recipe
-    
+
     def update(self, instance, validated_data):
         if validated_data.get('tags'):
             instance.tags.clear()
@@ -296,7 +292,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             ingredients = validated_data.pop('recipe_ingredient')
             self.create_ingredients(instance, ingredients)
         return super().update(instance, validated_data)
-    
+
     def to_representation(self, instance):
         return ShortRecipe(
             instance, context={'request': self.context.get('request')}
@@ -317,7 +313,7 @@ class FollowSerializer(serializers.ModelSerializer):
         method_name='get_recipes_count',
     )
     is_subscribed = serializers.BooleanField(default=True)
-    
+
     class Meta:
         model = Follow
         fields = (
@@ -331,19 +327,20 @@ class FollowSerializer(serializers.ModelSerializer):
             'recipes_count',
         )
         read_only_fields = ('__all__',)
-        
+
     def get_recipes_count(self, follower):
         """Поле для обозначения общего количества рецептов пользователя."""
         return follower.author.recipes.count()
 
     def get_recipes(self, follower):
-        """Поле сериализатора с ограниччением количества рецептов и их коротким представлением"""
+        """Поле сериализатора с ограниччением количества рецептов
+        и их коротким представлением"""
         request = self.context.get('request')
         recipes_limit = (int(request.query_params.get('recipes_limit'))
                          if request.query_params.get('recipes_limit')
                          else None)
         recipes = (Recipe.objects.filter(author=follower.author)
-                   if not recipes_limit 
+                   if not recipes_limit
                    else Recipe.objects.filter(author=follower.author)
                    [:recipes_limit])
         serializer = ShortRecipe(

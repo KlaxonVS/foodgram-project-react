@@ -122,7 +122,8 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    """Промежуточная модель рецепт-ингредиент. Дополнительное поле количество"""
+    """Промежуточная модель рецепт-ингредиент.
+    Дополнительное поле количество"""
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='Рецепт',
@@ -170,7 +171,7 @@ class FavoriteAndCart(models.Model):
         verbose_name='Рецепт',
         on_delete=models.CASCADE
     )
-    
+
     class Meta:
         abstract = True
 

@@ -15,10 +15,10 @@ class UserAdmin(admin.ModelAdmin):
 
     def full_name(self, obj,):
         return obj.get_full_name() or 'Безымянный'
-    
+
     def followers(self, obj,):
         return obj.following.count()
-    
+
     def recipe_count(self, obj,):
         return obj.recipes.count()
 

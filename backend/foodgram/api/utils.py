@@ -4,7 +4,7 @@ from django.http import HttpResponse
 def text_cart(querryset):
     content = '\n'.join([
         (f'{ol}. {ingredient["ingredient__name"]} '
-         f'{ingredient["amount"]} ' 
+         f'{ingredient["amount"]} '
          f'{ingredient["ingredient__measurement_unit"]}'
          ) for ol, ingredient in enumerate(list(querryset), start=1)
     ])

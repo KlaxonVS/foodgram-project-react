@@ -14,11 +14,11 @@ class UserViewSetMixin(viewsets.GenericViewSet,
 
 
 class AddDeleteMixin:
-    
+
     handlers = {
-        'follow' : [
+        'follow': [
             Follow, ['author_id'], 'Вы уже подписаны на автора.',
-            'many', 
+            'many',
         ],
         'favorite': [
             Favorite, ['recipe_id'],
@@ -53,7 +53,6 @@ class AddDeleteMixin:
         else:
             serializer = serializer(from_id)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
 
     def delete_bound(self, id, handler):
         bound = self.handlers[handler]
@@ -65,4 +64,3 @@ class AddDeleteMixin:
             **as_key
         ).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        

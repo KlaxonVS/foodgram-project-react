@@ -39,9 +39,9 @@ class UserViewSet(AddDeleteMixin, UserViewSetMixin):
     def user_me_view(self, request):
         """Метод дающий доступ пользователю к данным о себе."""
         user = request.user
-        serializer = self.get_serializer(user)        
+        serializer = self.get_serializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     @action(methods=['get'], detail=False, url_path='subscriptions',
             permission_classes=[permissions.IsAuthenticated])
     def user_subscriptions(self, request):
@@ -51,15 +51,15 @@ class UserViewSet(AddDeleteMixin, UserViewSetMixin):
         serializer = FollowSerializer(
             self.paginate_queryset(following), many=True,
             context={'request': request}
-        )  
+        )
         return self.get_paginated_response(serializer.data)
-    
+
     @action(methods=['post'], detail=True, url_path='subscribe',
             permission_classes=[permissions.IsAuthenticated])
     def user_subscribe(self, request, id):
         """Подписка и отписка от авторов"""
         return self.add_bound(id, 'follow', FollowSerializer)
-    
+
     @user_subscribe.mapping.delete
     def delete_subscribtion(self, request, id):
         return self.delete_bound(id, 'follow')
@@ -81,7 +81,7 @@ class UserViewSet(AddDeleteMixin, UserViewSetMixin):
         user.set_password(serializer.validated_data.get('new_password'))
         user.save()
         return Response('Пароль изменен', status=status.HTTP_200_OK)
-    
+
     def create(self, request):
         serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -91,7 +91,7 @@ class UserViewSet(AddDeleteMixin, UserViewSetMixin):
             serializer.data,
             status=status.HTTP_201_CREATED, headers=headers
         )
-    
+
     def perform_create(self, serializer):
         user = serializer.save()
         user.set_password(user.password)
@@ -99,7 +99,7 @@ class UserViewSet(AddDeleteMixin, UserViewSetMixin):
 
 
 @api_view(['post'])
-@permission_classes([permissions.AllowAny,])
+@permission_classes([permissions.AllowAny, ])
 def login(request):
     """View-функция для получения пользователя токена через email и пароль"""
     serializer = Login(data=request.data)
@@ -113,8 +113,9 @@ def login(request):
     token, _ = Token.objects.get_or_create(user=user)
     return Response({'auth_token': str(token)}, status=status.HTTP_201_CREATED)
 
+
 @api_view(['post'])
-@permission_classes([permissions.IsAuthenticated,])
+@permission_classes([permissions.IsAuthenticated, ])
 def logout(request):
     """View-функция для завершения действия токена пользователем вручную"""
     try:
@@ -157,7 +158,7 @@ class RecipeViewSet(AddDeleteMixin, viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     ordering_fields = ('-pub_date',)
-    
+
     def get_serializer_class(self):
         return (RecipeViewSerializer
                 if self.request.method in permissions.SAFE_METHODS
@@ -168,7 +169,7 @@ class RecipeViewSet(AddDeleteMixin, viewsets.ModelViewSet):
     def user_favorite(self, request, id):
         """Функция добавления и удаления в избранное"""
         return self.add_bound(id, 'favorite', ShortRecipe)
-    
+
     @user_favorite.mapping.delete
     def delete_favorite(self, request, id):
         return self.delete_bound(id, 'favorite')
@@ -178,11 +179,10 @@ class RecipeViewSet(AddDeleteMixin, viewsets.ModelViewSet):
     def user_cart(self, request, id):
         """Функция добавления и удаления в корзину"""
         return self.add_bound(id, 'cart', ShortRecipe)
-    
+
     @user_cart.mapping.delete
     def delete_cart(self, request, id):
         return self.delete_bound(id, 'cart')
-
 
     @action(methods=['get'], detail=False, url_path='download_shopping_cart',
             permission_classes=[permissions.IsAuthenticated])
