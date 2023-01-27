@@ -1,6 +1,7 @@
 # Personal
 private/
 .env.server
+flake8env/
 
 # Media and Statics
 media/
