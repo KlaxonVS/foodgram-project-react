@@ -7,25 +7,32 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
 admin.site.empty_value_display = '-пусто-'
 
 
+class IngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
+    min_num = 1
+
+
 class RecipeAdmin(admin.ModelAdmin):
-    readonly_fields = ('favorite_count', 'ingredient_list')
+    inlines = (IngredientInline,)
+    readonly_fields = ('favorite_count',)
     list_display = (
         'pub_date',
         'id',
         'name',
         'author',
         'favorite_count',
+        'ingredient_list'
     )
     search_fields = ('name', 'author',)
     list_filter = ('tags',)
     list_per_page = settings.PAGE_LMT
     
     def ingredient_list(self, obj):
-        return '\n'.join([
-            f'{ol}. {recipe_i.ingredient.name}: {recipe_i.amount}'
-            f'{recipe_i.ingredient.measurement_unit}.'
-            for ol, recipe_i 
-            in enumerate(obj.recipe_ingredient.all(), start=1)
+        return ', '.join([
+            f'{recipe_i.ingredient.name}'
+            for recipe_i 
+            in obj.recipe_ingredient.all()
         ])
     
     def favorite_count(self, obj):

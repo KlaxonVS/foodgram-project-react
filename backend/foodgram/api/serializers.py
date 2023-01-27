@@ -123,9 +123,9 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания промежуточной модели рецепта-ингредиента."""
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),
                                             source='ingredient')
-    amount = serializers.FloatField(
+    amount = serializers.IntegerField(
         validators=
-        [MinValueValidator(0.01, 'Количество должно быть больше нуля')]
+        [MinValueValidator(1, 'Количество должно быть больше нуля')]
     )
     
     class Meta:
@@ -265,9 +265,9 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_ingredients(recipe, ingredients):
-        def sorter(ingredient):
-            return ingredient.get('ingredient').id
-        ingredients.sort(key=sorter)
+        ingredients.sort(
+            key=lambda ingredient: ingredient.get('ingredient').id
+            )
         RecipeIngredient.objects.bulk_create(
             [RecipeIngredient(
                 recipe=recipe,

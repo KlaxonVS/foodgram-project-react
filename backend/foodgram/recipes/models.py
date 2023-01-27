@@ -135,10 +135,10 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         related_name='recipe_ingredient'
     )
-    amount = models.FloatField(
+    amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
         validators=[MinValueValidator(
-            0.01,
+            1,
             'Количество должно быть больше нуля'
         )]
     )

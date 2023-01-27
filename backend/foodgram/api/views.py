@@ -7,10 +7,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 
-from recipes.models import (Ingredient, Recipe, RecipeIngredient,
-                            Tag)
-from users.models import User
-
 from .filters import NameSearchFilter, RecipeFilter
 from .mixins import AddDeleteMixin, UserViewSetMixin
 from .paginators import FoodgramPaginator
@@ -20,6 +16,10 @@ from .serializers import (ChangePassword, FollowSerializer,
                           RecipeViewSerializer, TagSerializer,
                           UserCreateSerializer, UserSerializer, ShortRecipe)
 from .utils import text_cart
+
+from recipes.models import (Ingredient, Recipe, RecipeIngredient,
+                            Tag)
+from users.models import User
 
 
 class UserViewSet(AddDeleteMixin, UserViewSetMixin):

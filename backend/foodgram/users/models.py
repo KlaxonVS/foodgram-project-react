@@ -28,6 +28,9 @@ class User(AbstractUser):
         'Фамилия',
         max_length=settings.L_NAME_LENGTH
     )
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         ordering = ('email',)
