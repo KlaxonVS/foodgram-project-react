@@ -4,7 +4,7 @@
 [Ссылка на API](http://vorvorsky.sytes.net/api/)
 [Ссылка на админку](http://vorvorsky.sytes.net/admin/)
 [Ссылка на redoc](http://vorvorsky.sytes.net/api/docs/)
-аккаунт: foodgram_admin пароль: zee5czee5c1488
+<br>аккаунт: foodgram_admin<br>пароль: zee5czee5c1488
 
 ***
 ### Технологии:
