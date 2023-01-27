@@ -62,7 +62,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }} 
         script: |
-          cd yamdb/
+          cd foodgram/
           sudo docker pull ${{ secrets.DOCKERHUB_USER }}/foodgram_backend:latest
           sudo docker compose rm -s backend
           sudo docker compose up -d 
