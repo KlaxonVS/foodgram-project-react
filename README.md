@@ -2,7 +2,10 @@
 ***
 [Ссылка на сайт](http://vorvorsky.sytes.net/recipes)
 [Ссылка на API](http://vorvorsky.sytes.net/api/)
+[Ссылка на админку](http://vorvorsky.sytes.net/admin/)
 [Ссылка на redoc](http://vorvorsky.sytes.net/api/docs/)
+аккаунт: foodgram_admin пароль: zee5czee5c1488
+
 ***
 ### Технологии:
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
