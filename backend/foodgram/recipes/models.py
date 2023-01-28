@@ -147,12 +147,12 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Количество ингредиента'
         verbose_name_plural = 'Количество ингредиентов'
-        constraints = [
+        constraints = (
             UniqueConstraint(
                 fields=('recipe', 'ingredient'),
                 name='Ингредиенты в рецепте не повторяются'
             ),
-        ]
+        )
 
     def __str__(self):
         return (f'{self.recipe}: {self.ingredient.name} -- {self.amount}'
@@ -180,7 +180,7 @@ class Favorite(FavoriteAndCart):
     """Модель избранных рецептов."""
     class Meta:
         default_related_name = 'favorite'
-        ordering = ['user']
+        ordering = ('user', )
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
         constraints = (
