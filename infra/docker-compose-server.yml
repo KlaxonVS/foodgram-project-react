@@ -62,7 +62,7 @@ services:
       - certbot-etc:/etc/letsencrypt
     depends_on:
       - nginx
-    command: --dry-run certonly --webroot --webroot-path=/var/html/www --email ${EMAIL} --agree-tos --no-eff-email --force-renewal -d ${DOMAIN}
+    command: certonly --dry-run --webroot --webroot-path=/var/html/www --email ${EMAIL} --agree-tos --no-eff-email --force-renewal -d ${DOMAIN}
     env_file:
       - ./.env
 
