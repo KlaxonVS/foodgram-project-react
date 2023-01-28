@@ -1,11 +1,12 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-from .forms import UserCreateForm
 from users.models import Follow, User
 
 
-class UserAdmin(admin.ModelAdmin):
-    add_form = UserCreateForm
+# аккаунт я сделал, не заметил что пароль не хешируется и наследовать админку
+# из-за этого нужно от UserAdmin для пользователя
+class UserAdmin(UserAdmin):
     readonly_fields = ('followers', 'recipe_count')
     list_display = (
         'email',
