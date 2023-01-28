@@ -55,7 +55,7 @@ class Tag(models.Model):
     )
 
     class Meta:
-        ordering = ['name']
+        ordering = ('name', )
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -113,7 +113,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ['-pub_date']
+        ordering = ('-pub_date', )
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -198,9 +198,15 @@ class ShoppingCart(FavoriteAndCart):
     """Модель корзины покупок."""
     class Meta:
         default_related_name = 'cart'
-        ordering = ['id']
+        ordering = ('id', )
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'
+        constraints = (
+            UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='Нельзя дважды добавить в корзину'
+            ),
+        )
 
     def __str__(self):
-        return f'{self.user.username} добывил в корзину {self.recipe.name}'
+        return f'{self.user.username} добавил в корзину {self.recipe.name}'

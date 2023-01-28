@@ -1,9 +1,11 @@
 from django.contrib import admin
 
+from .forms import UserCreateForm
 from users.models import Follow, User
 
 
 class UserAdmin(admin.ModelAdmin):
+    add_form = UserCreateForm
     readonly_fields = ('followers', 'recipe_count')
     list_display = (
         'email',

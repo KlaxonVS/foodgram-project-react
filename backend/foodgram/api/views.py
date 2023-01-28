@@ -16,7 +16,6 @@ from .serializers import (ChangePassword, FollowSerializer,
                           RecipeViewSerializer, TagSerializer,
                           UserCreateSerializer, UserSerializer, ShortRecipe)
 from .utils import text_cart
-
 from recipes.models import (Ingredient, Recipe, RecipeIngredient,
                             Tag)
 from users.models import User
