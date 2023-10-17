@@ -1,0 +1,9 @@
+BEGIN;
+SELECT setval(pg_get_serial_sequence('"recipes_ingredient"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "recipes_ingredient";
+SELECT setval(pg_get_serial_sequence('"recipes_tag"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "recipes_tag";
+SELECT setval(pg_get_serial_sequence('"recipes_recipe_tags"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "recipes_recipe_tags";
+SELECT setval(pg_get_serial_sequence('"recipes_recipe"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "recipes_recipe";
+SELECT setval(pg_get_serial_sequence('"recipes_recipeingredient"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "recipes_recipeingredient";
+SELECT setval(pg_get_serial_sequence('"recipes_favorite"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "recipes_favorite";
+SELECT setval(pg_get_serial_sequence('"recipes_shoppingcart"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "recipes_shoppingcart";
+COMMIT;

@@ -1,0 +1,13 @@
+SECRET_KEY=3ui4h89h893fu2903fj2idjkn23rp89ju8239uf
+ALLOWED_HOSTS=127.0.0.1
+LOCAL=False
+DEBUG=
+DB_ENGINE=django.db.backends.postgresql
+POSTGRES_DB=foodgram_db
+POSTGRES_USER=foodgram_adm
+POSTGRES_PASSWORD=test_pswrd
+DB_HOST=db
+DB_PORT=5432
+SQLITE=False
+DOMAIN=test.ru
+EMAIL=test@mail.ru

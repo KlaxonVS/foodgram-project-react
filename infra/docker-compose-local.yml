@@ -4,14 +4,12 @@ volumes:
   database:
   static_value:
   media_value:
-  certbot-etc:
-  web-root:
 
 services:
 
   frontend:
     container_name: foodgram_frontend
-    image: vorvorsky/foodgram_frontend:v1.02
+    image: vorvorsky/foodgram_frontend:x86_64
     volumes:
       - ../frontend/:/app/result_build/
 
@@ -22,10 +20,10 @@ services:
       - database:/var/lib/postgresql/data/
     env_file:
       - ./.env
-
+  
   backend:
     container_name: foodgram_backend
-    image: vorvorsky/foodgram_backend:v1.07
+    image: vorvorsky/foodgram_backend:x86_64
     restart: always
     command: >
       bash -c "gunicorn foodgram.wsgi:application --bind 0:8000"
@@ -42,28 +40,11 @@ services:
     image: nginx:1.19.3
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
-      - ./docs/:/usr/share/nginx/html/api/docs/
+      - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/app/static/
       - media_value:/app/media/
-      - web-root:/var/html/www
-      - certbot-etc:/etc/letsencrypt
     depends_on:
       - backend
-
-  certbot:
-    image: certbot/certbot
-    container_name: foodgram_certbot
-    volumes:
-      - web-root:/var/html/www
-      - certbot-etc:/etc/letsencrypt
-    depends_on:
-      - nginx
-    command: certonly --dry-run --webroot --webroot-path=/var/html/www --email ${EMAIL} --agree-tos --no-eff-email --force-renewal -d ${DOMAIN}
-    env_file:
-      - ./.env
-
-

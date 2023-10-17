@@ -1,0 +1,1 @@
+docker build -t vorvorsky/foodgram_frontend:x86_64 .

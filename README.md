@@ -2,10 +2,10 @@
 ***
 [![base_workflow](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/foodgram_workflow.yml)<br/>
 ***
-[Ссылка на сайт](https://vorsky.sytes.net/recipes)
-[Ссылка на API](https://vorsky.sytes.net/api/)
-[Ссылка на админку](https://vorsky.sytes.net/admin/)
-[Ссылка на redoc](https://vorsky.sytes.net/api/docs/)
+[Ссылка на сайт](https://klaxonvs.ddns.net/recipes)
+[Ссылка на API](https://klaxonvs.ddns.net/api/)
+[Ссылка на админку](https://klaxonvs.ddns.net/admin/)
+[Ссылка на redoc](https://klaxonvs.ddns.net/api/docs/)
 
 ***
 ### Технологии:
@@ -40,18 +40,18 @@ Cайт Foodgram, «Продуктовый помощник». На этом с�
 * DB_PORT (порт)
 * SQLITE (sqlite как бд)
 
-3. В консоли из папки `infra/` соберите контейнер: `sudo docker compose up -d --build`
+3. В консоли из папки `infra/` соберите контейнер: `docker compose up -d --build`
 4. Выполнить миграции:
-   * `sudo docker compose exec backend python manage.py makemigrations`
-   * `sudo docker compose exec backend python manage.py migrate`
+   * `docker compose exec backend python manage.py makemigrations [module]`,
+   * `docker compose exec backend python manage.py migrate`
 5. Соберите статику:<br/>
-`sudo docker compose exec backend python manage.py collectstatic --no-input`
+`docker compose exec backend python manage.py collectstatic --no-input`
 
 ### Если необходима выгрузка данных в БД из csv файлов:
-1. Выполнить выгрузку ингредиентов и базовых тегов коммандой:<br/>`sudo docker compose exec web python manage.py load_data`
+1. Выполнить выгрузку ингредиентов и базовых тегов коммандой:<br/>`docker compose exec backend python manage.py load_data`
 2. В PostgreSQL В связи с загрузкой могут сбиться данные о последнем индексе, необходимо<br/>
-получить SQL команды для их обновления:<br/>`sudo docker compose exec web python manage.py sqlsequencereset recipes`
-3. Войти в оболочку psql: `sudo docker compose exec db psql -U ${POSTGRES_USER}`
+получить SQL команды для их обновления:<br/>`docker compose exec backend python manage.py sqlsequencereset recipes > sql_reset.txt`
+3. Войти в оболочку psql: `docker compose exec db psql -U ${POSTGRES_USER} ${POSTGRES_DB}`
 4. Выполните полученные SQL запросы.
 
 ### Создание суперпользователя:
