@@ -2,6 +2,7 @@
 ***
 [![base_workflow](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)](https://github.com/VorVorsky/foodgram-project-react/actions/workflows/foodgram_workflow.yml)<br/>
 ***
+Временно отключен сервер.<br/>
 [Ссылка на сайт](https://klaxonvs.ddns.net/recipes)
 [Ссылка на API](https://klaxonvs.ddns.net/api/)
 [Ссылка на админку](https://klaxonvs.ddns.net/admin/)
